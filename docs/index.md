@@ -81,35 +81,35 @@ buckets, lifecycle rules and other features.
     ```
 
     ??? info "Output"
-    ```console
-        Initializing modules...
-        - datalake in ../..
+        ```console
+            Initializing modules...
+            - datalake in ../..
 
-        Initializing the backend...
+            Initializing the backend...
 
-        Initializing provider plugins...
-        - Finding latest version of hashicorp/random...
-        - Finding latest version of hashicorp/google...
-        - Installing hashicorp/random v3.5.1...
-        - Installed hashicorp/random v3.5.1 (signed by HashiCorp)
-        - Installing hashicorp/google v4.62.1...
-        - Installed hashicorp/google v4.62.1 (signed by HashiCorp)
+            Initializing provider plugins...
+            - Finding latest version of hashicorp/random...
+            - Finding latest version of hashicorp/google...
+            - Installing hashicorp/random v3.5.1...
+            - Installed hashicorp/random v3.5.1 (signed by HashiCorp)
+            - Installing hashicorp/google v4.62.1...
+            - Installed hashicorp/google v4.62.1 (signed by HashiCorp)
 
-        Terraform has created a lock file .terraform.lock.hcl to record the provider
-        selections it made above. Include this file in your version control repository
-        so that Terraform can guarantee to make the same selections by default when
-        you run "terraform init" in the future.
+            Terraform has created a lock file .terraform.lock.hcl to record the provider
+            selections it made above. Include this file in your version control repository
+            so that Terraform can guarantee to make the same selections by default when
+            you run "terraform init" in the future.
 
-        Terraform has been successfully initialized!
+            Terraform has been successfully initialized!
 
-        You may now begin working with Terraform. Try running "terraform plan" to see
-        any changes that are required for your infrastructure. All Terraform commands
-        should now work.
+            You may now begin working with Terraform. Try running "terraform plan" to see
+            any changes that are required for your infrastructure. All Terraform commands
+            should now work.
 
-        If you ever set or change modules or backend configuration for Terraform,
-        rerun this command to reinitialize your working directory. If you forget, other
-        commands will detect it and remind you to do so if necessary.
-    ```
+            If you ever set or change modules or backend configuration for Terraform,
+            rerun this command to reinitialize your working directory. If you forget, other
+            commands will detect it and remind you to do so if necessary.
+        ```
 
     ---
     Open `main.tf` to modify your GCP project ID and the parameters that you want (buckets,
@@ -122,62 +122,62 @@ buckets, lifecycle rules and other features.
     ```
 
     ??? info "Output"
-    ```console
-        [...]
+        ```console
+            [...]
 
-        # module.datalake.google_storage_bucket.buckets["source-b"] will be created
-        + resource "google_storage_bucket" "buckets" {
-            + force_destroy               = false
-            + id                          = (known after apply)
-            + location                    = "EUROPE-WEST1"
-            + name                        = (known after apply)
-            + project                     = "atf-sbx-barthelemy"
-            + public_access_prevention    = "enforced"
-            + self_link                   = (known after apply)
-            + storage_class               = "STANDARD"
-            + uniform_bucket_level_access = true
-            + url                         = (known after apply)
+            # module.datalake.google_storage_bucket.buckets["source-b"] will be created
+            + resource "google_storage_bucket" "buckets" {
+                + force_destroy               = false
+                + id                          = (known after apply)
+                + location                    = "EUROPE-WEST1"
+                + name                        = (known after apply)
+                + project                     = "atf-sbx-barthelemy"
+                + public_access_prevention    = "enforced"
+                + self_link                   = (known after apply)
+                + storage_class               = "STANDARD"
+                + uniform_bucket_level_access = true
+                + url                         = (known after apply)
 
-            + lifecycle_rule {
-                + action {
-                    + storage_class = "ARCHIVE"
-                    + type          = "SetStorageClass"
+                + lifecycle_rule {
+                    + action {
+                        + storage_class = "ARCHIVE"
+                        + type          = "SetStorageClass"
+                        }
+
+                    + condition {
+                        + age                   = 60
+                        + matches_prefix        = []
+                        + matches_storage_class = []
+                        + matches_suffix        = []
+                        + with_state            = (known after apply)
+                        }
                     }
 
-                + condition {
-                    + age                   = 60
-                    + matches_prefix        = []
-                    + matches_storage_class = []
-                    + matches_suffix        = []
-                    + with_state            = (known after apply)
+                + versioning {
+                    + enabled = (known after apply)
+                    }
+
+                + website {
+                    + main_page_suffix = (known after apply)
+                    + not_found_page   = (known after apply)
                     }
                 }
 
-            + versioning {
-                + enabled = (known after apply)
-                }
+            Plan: 3 to add, 0 to change, 0 to destroy.
 
-            + website {
-                + main_page_suffix = (known after apply)
-                + not_found_page   = (known after apply)
-                }
-            }
+            Do you want to perform these actions?
+            Terraform will perform the actions described above.
+            Only 'yes' will be accepted to approve.
 
-        Plan: 3 to add, 0 to change, 0 to destroy.
+            Enter a value: yes
 
-        Do you want to perform these actions?
-        Terraform will perform the actions described above.
-        Only 'yes' will be accepted to approve.
-
-        Enter a value: yes
-
-        random_string.prefix: Creating...
-        random_string.prefix: Creation complete after 0s [id=hmpq]
-        module.datalake.google_storage_bucket.buckets["source-a"]: Creating...
-        module.datalake.google_storage_bucket.buckets["source-b"]: Creating...
-        module.datalake.google_storage_bucket.buckets["source-b"]: Creation complete after 2s [id=atf-sbx-barthelemy-source-b-hmpq]
-        module.datalake.google_storage_bucket.buckets["source-a"]: Creation complete after 2s [id=atf-sbx-barthelemy-source-a-hmpq]
-    ```
+            random_string.prefix: Creating...
+            random_string.prefix: Creation complete after 0s [id=hmpq]
+            module.datalake.google_storage_bucket.buckets["source-a"]: Creating...
+            module.datalake.google_storage_bucket.buckets["source-b"]: Creating...
+            module.datalake.google_storage_bucket.buckets["source-b"]: Creation complete after 2s [id=atf-sbx-barthelemy-source-b-hmpq]
+            module.datalake.google_storage_bucket.buckets["source-a"]: Creation complete after 2s [id=atf-sbx-barthelemy-source-a-hmpq]
+        ```
     
     ---
     Clean up files created by Terraform:
