@@ -2,9 +2,9 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: terraform-google-datalake
-  title: Terraform module for GCP Data lake
+  title: Terraform module for GCP data lake
   description: >
-    This Terraform module allows you to  allows you to configure and deploy a data lake with multiple buckets, lifecycle rules and other features.
+    This Terraform module allows you to configure and deploy a data lake with multiple buckets, lifecycle rules and other features.
   annotations:
     github.com/project-slug: artefactory/terraform-google-datalake
     backstage.io/techdocs-ref: dir:.
