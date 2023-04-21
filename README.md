@@ -27,7 +27,7 @@ provider "google" {
 }
 
 module "datalake" {
-  source     = "../" # To define on Terraform registry
+  source     = "../../" # TODO: To define in Terraform registry
   project_id = local.project_id
   buckets    = [
     "source-a",
