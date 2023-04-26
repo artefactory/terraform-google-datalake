@@ -62,22 +62,22 @@ buckets, lifecycle rules and other features.
 
 ## Deploy the Data lake module on GCP
 
-⚠️ Experimental status: Some steps will change after putting the module in production (Terraform registry)
+⚠️ Experimental status: Some steps can be changed for the production step.
 
 === "One-shot deployment"
 
     !!! note ""
         This mode of deployment is quicker and easier. It's suitable for projects where the infrastructure is not meant to be managed by Terraform in the long run. Otherwise, prefer the managed deployment workflow.
 
-    Download the directory:
+    Download the standalone `main.tf`:
 
     ```console
-    curl -O https://raw.githubusercontent.com/artefactory/terraform-google-datalake/main/
+    curl -O https://raw.githubusercontent.com/artefactory/terraform-google-datalake/main/examples/standalone/main.tf
     ```
 
     ---
 
-    Put yourself into `/examples/standalone` directory and initialize Terraform:
+    Initialize Terraform:
     ```console
     terraform init
     ```
