@@ -5,6 +5,8 @@ buckets, lifecycle rules and other features.
 
 [View the module in GitHub](https://github.com/artefactory/terraform-google-datalake)
 
+[View the module in the Terraform registry](https://registry.terraform.io/modules/artefactory/datalake/google/latest)
+
 ---
 
 ## Pre-requisites

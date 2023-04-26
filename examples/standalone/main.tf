@@ -14,7 +14,7 @@ provider "google" {
 }
 
 module "datalake" {
-  source = "../../" # To define on Terraform registry
+  source = "artefactory/finops/google"
 
   project_id = local.project_id
 
