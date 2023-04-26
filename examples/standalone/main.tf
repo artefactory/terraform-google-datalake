@@ -14,7 +14,7 @@ provider "google" {
 }
 
 module "datalake" {
-  source = "artefactory/finops/google"
+  source = "artefactory/datalake/google"
 
   project_id = local.project_id
 
