@@ -11,6 +11,11 @@ This Terraform module allows you to configure and deploy a data lake with:
 - Quarantine bucket
 ...
 
+## Requirements: 
+User or service account credentials with the following roles must be used to set the IAM policies to the resources: 
+```Storage Admin: roles/storage.admin```
+
+
 ## Usage
 
 ### Basic

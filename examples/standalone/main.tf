@@ -20,8 +20,8 @@ module "datalake" {
 
   # Naming convention
   naming_convention = {
-    "prefix": local.project_id
-    "suffix": random_string.prefix.result
+    "prefix" : local.project_id
+    "suffix" : random_string.prefix.result
   }
 
   # List of buckets to create
@@ -29,4 +29,13 @@ module "datalake" {
     "source-a",
     "source-b"
   ]
+
+  # List of storage admins 
+  storage_admins = ["user:user@user.com"]
+
+  # List of object admins
+  object_admins = ["user:user@user.com"]
+
+  # List of viewers
+  object_viewers = ["user:user@user.com"]
 }

@@ -51,3 +51,21 @@ variable "naming_convention" {
     suffix = ""
   }
 }
+
+variable "storage_admins" {
+  description = "Liste of members that can create/delete/edit a bucket"
+  type        = list(any)
+  default     = []
+}
+
+variable "object_admins" {
+  description = "Liste of members that can create/delete an object"
+  type        = list(any)
+  default     = []
+}
+
+variable "object_viewers" {
+  description = "List of members that can view objects"
+  type        = list(any)
+  default     = []
+}
