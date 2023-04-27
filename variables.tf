@@ -54,18 +54,24 @@ variable "naming_convention" {
 
 variable "storage_admins" {
   description = "Liste of members that can create/delete/edit a bucket"
-  type        = list(any)
+  type        = list(string)
   default     = []
 }
 
 variable "object_admins" {
   description = "Liste of members that can create/delete an object"
-  type        = list(any)
+  type        = list(string)
   default     = []
 }
 
 variable "object_viewers" {
   description = "List of members that can view objects"
-  type        = list(any)
+  type        = list(string)
   default     = []
+}
+
+variable "notification_topic_id" {
+  description = "ID of the topic that will receive notifications concerning objects"
+  type        = string
+  default     = ""
 }

@@ -38,4 +38,8 @@ module "datalake" {
 
   # List of viewers
   object_viewers = ["user:user@user.com"]
+
+  # Notification topic 
+  notification_topic_id = "datalake-bucket-notifications"
+
 }

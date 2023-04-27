@@ -1,3 +1,7 @@
+provider "google" {
+  project = var.project_id
+}
+
 resource "google_storage_bucket" "buckets" {
   for_each = toset(var.buckets)
 
@@ -44,5 +48,28 @@ resource "google_storage_bucket_iam_binding" "object_viewers" {
   for_each = google_storage_bucket.buckets
   bucket   = each.value.name
   role     = "roles/storage.objectViewer"
-  members  = var.object_viewer
+  members  = var.object_viewers
+}
+
+resource "google_storage_notification" "notification" {
+  for_each       = var.notification_topic_id == "" ? {} : google_storage_bucket.buckets
+  bucket         = each.value.name
+  payload_format = "JSON_API_V1"
+  topic          = google_pubsub_topic.notification_topic.id
+  event_types    = ["OBJECT_FINALIZE", "OBJECT_DELETE", "OBJECT_ARCHIVE", "OBJECT_METADATA_UPDATE"]
+  depends_on     = [google_pubsub_topic_iam_binding.bind_gcs_svc_acc]
+}
+
+data "google_storage_project_service_account" "gcs_account" {
+}
+
+resource "google_pubsub_topic_iam_binding" "bind_gcs_svc_acc" {
+  count   = var.notification_topic_id == "" ? 0 : 1
+  topic   = google_pubsub_topic.notification_topic.id
+  role    = "roles/pubsub.publisher"
+  members = ["serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"]
+}
+
+resource "google_pubsub_topic" "notification_topic" {
+  name = var.notification_topic_id
 }
