@@ -13,9 +13,7 @@ def main(data, context):
     object_metadatas=get_object_metadata(data)
     regex_pattern=re.compile(object_metadatas.bucket_object_regex)
     if not re.match(pattern=regex_pattern, string=object_metadatas.object_name):
-        logging.warn("Checkpoint2")
         move_object_to_quarentine(bucket_name=object_metadatas.bucket_name, object_name=object_metadatas.object_name)
-    logging.warn("Checkpoint3")
 
 @dataclass
 class ObjectMetadata:
@@ -39,9 +37,10 @@ def get_pubsub_attribute(data: bytes) -> dict:
     return data["attributes"]
 
 def move_object_to_quarentine(bucket_name : str, object_name : str ) -> None:
+    logging.warn(f"Will move the object {object_name} to the quarentine bucket {destination_bucket} ")
     source_bucket = storage_client.get_bucket(bucket_name)
     source_object = source_bucket.blob(object_name)
-    destination_bucket = get_quarentine_bucket() #storage_client.get_bucket(f"{project_id}-{QUARENTINE_BUCKET_NAME}")
+    destination_bucket = get_quarentine_bucket() 
     source_bucket.copy_blob(source_object, destination_bucket, object_name)
     source_object.delete()
     logging.warn(f"successfully moved the object {object_name} to the quarentine bucket {destination_bucket} ")

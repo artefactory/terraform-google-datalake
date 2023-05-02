@@ -21,4 +21,3 @@ deploy_cloud_function:
 	gcloud services enable run.googleapis.com && \
 	echo "deploying cloud function " && \
 	gcloud functions deploy send_blob_to_quarentine_bucket --region=$(REGION) --runtime=python310 --gen2 --entry-point=main --service-account="$(CF_SVC_ACCOUNT)@$(PROJECT_ID).iam.gserviceaccount.com" --trigger-topic=$(NOTIFICTION_TOPIC_NAME)  --trigger-service-account="$(CF_SVC_ACCOUNT)@$(PROJECT_ID).iam.gserviceaccount.com"
-
