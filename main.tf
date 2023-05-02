@@ -56,8 +56,11 @@ resource "google_storage_notification" "notification" {
   bucket         = each.value.name
   payload_format = "JSON_API_V1"
   topic          = google_pubsub_topic.notification_topic.id
-  event_types    = ["OBJECT_FINALIZE", "OBJECT_DELETE", "OBJECT_ARCHIVE", "OBJECT_METADATA_UPDATE"]
-  depends_on     = [google_pubsub_topic_iam_binding.bind_gcs_svc_acc]
+  custom_attributes = {
+    regex = var.object_validation_regex # "^([a-z]{2}\\d{3}|[a-z]{3}\\d{2})-[a-z]{2}-\\d{2}$"
+  }
+  event_types = ["OBJECT_FINALIZE", "OBJECT_DELETE", "OBJECT_ARCHIVE", "OBJECT_METADATA_UPDATE"]
+  depends_on  = [google_pubsub_topic_iam_binding.bind_gcs_svc_acc]
 }
 
 data "google_storage_project_service_account" "gcs_account" {
@@ -72,4 +75,15 @@ resource "google_pubsub_topic_iam_binding" "bind_gcs_svc_acc" {
 
 resource "google_pubsub_topic" "notification_topic" {
   name = var.notification_topic_id
+}
+
+resource "google_storage_bucket" "quarentine_bucket" {
+  count   = var.object_validation_regex == null ? 0 : 1
+  name     = "${var.project_id}-quarentine"
+  location = var.location
+  force_destroy = false
+  project       = var.project_id
+  storage_class = "STANDARD"
+  uniform_bucket_level_access = true
+  public_access_prevention    = "enforced"
 }

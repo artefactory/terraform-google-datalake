@@ -1,5 +1,5 @@
 locals {
-  project_id = "PROJECT_ID" # Replace this with your actual project id
+  project_id = "la-sandbox-de-reda-fee9" # Replace this with your actual project id
 }
 
 resource "random_string" "prefix" {
@@ -14,7 +14,8 @@ provider "google" {
 }
 
 module "datalake" {
-  source = "artefactory/datalake/google"
+  #source = "artefactory/datalake/google"
+  source = "../.."
 
   project_id = local.project_id
 
@@ -40,6 +41,9 @@ module "datalake" {
   object_viewers = ["user:user@user.com"]
 
   # Notification topic 
-  notification_topic_id = "datalake-bucket-notifications"
+  notification_topic_id = "datalake-bucket-notifications-a"
+
+  # Custom regex
+  object_validation_regex=  "^\\S+$" #"\\s"
 
 }

@@ -75,3 +75,9 @@ variable "notification_topic_id" {
   type        = string
   default     = ""
 }
+
+variable "object_validation_regex" {
+  description = "A regex ruling the format of object names. This is added as an attribute to the notification topic, if an object's name does NOT respect this regex, it is sent to a quarentine bucket."
+  type        = string
+  default     = null
+}
