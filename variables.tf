@@ -51,3 +51,33 @@ variable "naming_convention" {
     suffix = ""
   }
 }
+
+variable "storage_admins" {
+  description = "Liste of members that can create/delete/edit a bucket"
+  type        = list(string)
+  default     = []
+}
+
+variable "object_admins" {
+  description = "Liste of members that can create/delete an object"
+  type        = list(string)
+  default     = []
+}
+
+variable "object_viewers" {
+  description = "List of members that can view objects"
+  type        = list(string)
+  default     = []
+}
+
+variable "notification_topic_id" {
+  description = "ID of the topic that will receive notifications concerning objects"
+  type        = string
+  default     = ""
+}
+
+variable "object_validation_regex" {
+  description = "A regex ruling the format of object names. This is added as an attribute to the notification topic, if an object's name does NOT respect this regex, it is sent to a quarentine bucket."
+  type        = string
+  default     = null
+}

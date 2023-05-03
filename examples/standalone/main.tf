@@ -1,5 +1,5 @@
 locals {
-  project_id = "PROJECT_ID" # Replace this with your actual project id
+  project_id = "la-sandbox-de-reda-fee9" # Replace this with your actual project id
 }
 
 resource "random_string" "prefix" {
@@ -14,14 +14,15 @@ provider "google" {
 }
 
 module "datalake" {
-  source = "artefactory/datalake/google"
+  #source = "artefactory/datalake/google"
+  source = "../.."
 
   project_id = local.project_id
 
   # Naming convention
   naming_convention = {
-    "prefix": local.project_id
-    "suffix": random_string.prefix.result
+    "prefix" : local.project_id
+    "suffix" : random_string.prefix.result
   }
 
   # List of buckets to create
@@ -29,4 +30,20 @@ module "datalake" {
     "source-a",
     "source-b"
   ]
+
+  # List of storage admins 
+  storage_admins = ["user:user@user.com"]
+
+  # List of object admins
+  object_admins = ["user:user@user.com"]
+
+  # List of viewers
+  object_viewers = ["user:user@user.com"]
+
+  # Notification topic 
+  notification_topic_id = "datalake-bucket-notifications-a"
+
+  # Custom regex
+  object_validation_regex=  "^\\S+$" #"\\s"
+
 }
