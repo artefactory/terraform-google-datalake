@@ -1,5 +1,5 @@
 locals {
-  project_id = "PROJECT_ID" # Replace this with your actual project id
+  project_id = "vertex-template-1-1c2a" # Replace this with your actual project id
 }
 
 resource "random_string" "prefix" {
@@ -14,8 +14,8 @@ provider "google" {
 }
 
 module "datalake" {
-  source = "artefactory/datalake/google"
-
+  #source = "artefactory/datalake/google"
+  source = "../.."
   project_id = local.project_id
 
   # Naming convention
@@ -27,19 +27,21 @@ module "datalake" {
   # List of buckets to create
   buckets = [
     "source-a",
-    "source-b"
+    "source-b",
+    "source-c",
+    "source-d"
   ]
 
   # List of storage admins 
-  storage_admins = ["user:user@user.com"]
+  storage_admins = ["user:rida.kejji@artefact.com"]
 
   # List of object admins
-  object_admins = ["user:user@user.com"]
+  object_admins = ["user:rida.kejji@artefact.com"]
 
   # List of viewers
-  object_viewers = ["user:user@user.com"]
+  object_viewers = ["user:rida.kejji@artefact.com"]
 
   # Notification topic 
-  notification_topic_id = "datalake-bucket-notifications"
+  notification_topic_id = "datalake-bucket-notifications-f"
 
 }
