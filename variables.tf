@@ -21,7 +21,7 @@ variable "buckets_config" {
     object({
       name      = string
       autoclass = optional(bool)
-      lifecycle_rules = optional(list( # if autoclass is false
+      lifecycle_rules = optional(list( # if autoclass is false or unspecified
         object({
           delay         = number
           storage_class = string
