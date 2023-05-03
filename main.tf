@@ -77,7 +77,7 @@ resource "google_pubsub_topic" "notification_topic" {
   name = var.notification_topic_id
 }
 
-resource "google_storage_bucket" "quarentine_bucket" {
+resource "google_storage_bucket" "quarentine_bucket" { # Setup lifecycle policy
   count   = var.object_validation_regex == null ? 0 : 1
   name     = "${var.project_id}-quarentine"
   location = var.location

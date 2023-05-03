@@ -26,7 +26,6 @@ def get_object_metadata(data : bytes) -> ObjectMetadata:
     attributes = get_pubsub_attribute(data)
     return ObjectMetadata(bucket_name=body_json["bucket"], object_name=body_json["name"], bucket_object_regex=attributes["regex"])
 
-
 def get_pubsub_body_json(data: bytes) -> any:
     pubsub_data = base64.b64decode(data["data"]).decode("utf-8")
     data_json = json.loads(pubsub_data)
@@ -40,13 +39,13 @@ def move_object_to_quarentine(bucket_name : str, object_name : str ) -> None:
     logging.warn(f"Will move the object {object_name} to the quarentine bucket {destination_bucket} ")
     source_bucket = storage_client.get_bucket(bucket_name)
     source_object = source_bucket.blob(object_name)
-    destination_bucket = get_quarentine_bucket() 
-    source_bucket.copy_blob(source_object, destination_bucket, object_name)
+    destination_bucket = get_quarentine_bucket()
+    source_bucket.copy_blob(source_object, destination_bucket, object_name) #TODO: add date
     source_object.delete()
     logging.warn(f"successfully moved the object {object_name} to the quarentine bucket {destination_bucket} ")
 
 def get_quarentine_bucket() -> str:
-    """get_quarentine_bucket is used as a workaround to get the  quarentine bucket. Because the name of the quarentine bucket contains the id 
+    """get_quarentine_bucket is used as a workaround to get the quarentine bucket. Because the name of the quarentine bucket contains the id 
     of the gcp project and the field is NOT available in the json payload sent by pubsub"""
     buckets = storage_client.list_buckets()
     for bucket in buckets:
