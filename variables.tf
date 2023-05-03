@@ -37,6 +37,7 @@ variable "buckets_config" {
       regex_validation   = optional(string)
     })
   )
+  default = []
 }
 
 variable "naming_convention" {
