@@ -15,18 +15,37 @@ provider "google" {
 
 module "datalake" {
   source = "artefactory/datalake/google"
-
   project_id = local.project_id
-
-  # Naming convention
-  naming_convention = {
-    "prefix": local.project_id
-    "suffix": random_string.prefix.result
-  }
-
-  # List of buckets to create
-  buckets = [
-    "source-a",
-    "source-b"
+  buckets_config = [
+    {
+      "name" : "sourceA",
+      "iam_rules" : [
+        {
+          roles = "roles/storage.admin"
+          principals = [
+            "blahblah@mail.com"
+          ]
+        }
+      ],
+      "lifecycle_rules" : [
+        {
+          "delay" : 60,
+          "storage_class" : "ARCHIVE",
+        }
+      ]
+    },
+    {
+      "name" : "sourceB",
+      "autoclass": true,
+      "iam_rules" : [
+        {
+          roles = "roles/storage.editor"
+          principals = [
+            "blahblah@mail.com"
+          ]
+        }
+      ],
+      "regex_validation" : "^\\S+$"
+    }
   ]
 }

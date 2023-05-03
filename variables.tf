@@ -15,27 +15,28 @@ variable "labels" {
   default     = {}
 }
 
-variable "buckets" {
-  description = "Name of the buckets to create"
-  type        = list(string)
-}
-
-variable "lifecycle_rules" {
-  description = "Lifecycle rules to define for each bucket"
+variable "buckets_config" {
+  description = "Data lake configuration per buckets"
   type = list(
-    object(
-      {
-        delay         = number
-        storage_class = string
-      }
-    )
+    object({
+      name      = string
+      autoclass = bool
+      lifecycle_rules = optional(list( # if autoclass is false
+        object({
+          delay         = number
+          storage_class = string
+        })
+      ))
+      iam_rules = optional(list(
+        object({
+          roles      = string
+          principals = list(string)
+        })
+      ))
+      notification_topic = optional(string)
+      regex_validation   = optional(string)
+    })
   )
-  default = [
-    {
-      "delay" : 60,
-      "storage_class" : "ARCHIVE",
-    }
-  ]
 }
 
 variable "naming_convention" {
