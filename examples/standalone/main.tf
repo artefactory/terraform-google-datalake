@@ -2,31 +2,41 @@ locals {
   project_id = "PROJECT_ID" # Replace this with your actual project id
 }
 
-resource "random_string" "prefix" {
-  length  = 4
-  upper   = false
-  special = false
-}
-
 provider "google" {
   user_project_override = true
   billing_project       = local.project_id
+}
+
+resource "random_string" "suffix" {
+  length  = 4
+  upper   = false
+  special = false
 }
 
 module "datalake" {
   source = "artefactory/datalake/google"
 
   project_id = local.project_id
-
-  # Naming convention
   naming_convention = {
-    "prefix": local.project_id
-    "suffix": random_string.prefix.result
+    "prefix" : local.project_id
+    "suffix" : random_string.suffix.result
   }
-
-  # List of buckets to create
-  buckets = [
-    "source-a",
-    "source-b"
+  buckets_config = [
+    {
+      "bucket_name" : "sourcea",
+      "iam_rules" : [
+        { "role" = "roles/storage.admin", "principals" = ["user:user@user.com"] }
+      ]
+      "autoclass" : false,
+      "lifecycle_rules" : [
+      ],
+      "notification_topic" : "hello"
+    },
+    {
+      "bucket_name" : "sourceb",
+      "iam_rules" : [{ "role" = "roles/storage.admin", "principals" = ["user:user@user.com"] }]
+      "autoclass" : false,
+      "lifecycle_rules" : [],
+    }
   ]
 }
