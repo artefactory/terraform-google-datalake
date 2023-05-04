@@ -29,7 +29,7 @@ variable "buckets_config" {
       ), [])
       iam_rules = optional(list(
         object({
-          role      = string
+          role       = string
           principals = list(string)
         })
       ), [])
