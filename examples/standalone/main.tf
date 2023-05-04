@@ -1,11 +1,5 @@
 locals {
-  project_id = "atf-sbx-barthelemy" # Replace this with your actual project id
-}
-
-resource "random_string" "prefix" {
-  length  = 4
-  upper   = false
-  special = false
+  project_id = "PROJECT_ID" # Replace this with your actual project id
 }
 
 provider "google" {
@@ -13,39 +7,36 @@ provider "google" {
   billing_project       = local.project_id
 }
 
+resource "random_string" "suffix" {
+  length  = 4
+  upper   = false
+  special = false
+}
+
 module "datalake" {
-  source     = "artefactory/datalake/google"
+  source = "artefactory/datalake/google"
+
   project_id = local.project_id
+  naming_convention = {
+    "prefix" : local.project_id
+    "suffix" : random_string.suffix.result
+  }
   buckets_config = [
     {
-      "name" : "sourceA",
+      "bucket_name" : "sourcea",
       "iam_rules" : [
-        {
-          role = "roles/storage.admin"
-          principals = [
-            "blahblah@mail.com"
-          ]
-        }
-      ],
-      "lifecycle_rules" : [
-        {
-          "delay" : 60,
-          "storage_class" : "ARCHIVE",
-        }
+        { "role" = "roles/storage.admin", "principals" = ["user:user@user.com"] }
       ]
+      "autoclass" : false,
+      "lifecycle_rules" : [
+      ],
+      "notification_topic" : "hello"
     },
     {
-      "name" : "sourceB",
-      "autoclass" : true,
-      "iam_rules" : [
-        {
-          role = "roles/storage.editor"
-          principals = [
-            "blahblah@mail.com"
-          ]
-        }
-      ],
-      "regex_validation" : "^\\S+$"
+      "bucket_name" : "sourceb",
+      "iam_rules" : [{ "role" = "roles/storage.admin", "principals" = ["user:user@user.com"] }]
+      "autoclass" : false,
+      "lifecycle_rules" : [],
     }
   ]
 }

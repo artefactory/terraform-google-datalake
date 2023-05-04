@@ -16,6 +16,7 @@ locals {
 resource "google_storage_bucket" "buckets" {
   for_each = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config })
 
+  labels   = var.labels
   name     = "${var.naming_convention.prefix}-${each.value.bucket_name}-${var.naming_convention.suffix}"
   location = var.location
 
@@ -45,20 +46,21 @@ resource "google_storage_bucket" "buckets" {
 }
 
 resource "google_storage_bucket_iam_member" "member" {
-  for_each = { for entry in local.iam_list : "${entry.bucket_name}.${entry.role}.${entry.principal}" => entry }
-
-  bucket = each.value.bucket_name
-  role   = each.value.role
-  member = each.value.principal
+  for_each   = { for entry in local.iam_list : "${entry.bucket_name}.${entry.role}.${entry.principal}" => entry }
+  bucket     = "${var.naming_convention.prefix}-${each.value.bucket_name}-${var.naming_convention.suffix}"
+  role       = each.value.role
+  member     = each.value.principal
+  depends_on = [google_storage_bucket.buckets]
 }
 
 resource "google_storage_notification" "notification" {
-  for_each       = var.notification_topic_id == "" ? {} : google_storage_bucket.buckets
-  bucket         = each.value.name
+  for_each       = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config if bucket_config.notification_topic != null })
+  bucket         = "${var.naming_convention.prefix}-${each.value.bucket_name}-${var.naming_convention.suffix}"
   payload_format = "JSON_API_V1"
-  topic          = google_pubsub_topic.notification_topic.id
+  topic          = each.value.notification_topic
   event_types    = ["OBJECT_FINALIZE", "OBJECT_DELETE", "OBJECT_ARCHIVE", "OBJECT_METADATA_UPDATE"]
-  depends_on     = [google_pubsub_topic_iam_binding.bind_gcs_svc_acc]
+  depends_on = [google_pubsub_topic_iam_binding.bind_gcs_svc_acc,
+  google_storage_bucket.buckets]
 }
 
 data "google_storage_project_service_account" "gcs_account" {
@@ -67,14 +69,14 @@ data "google_storage_project_service_account" "gcs_account" {
 
 resource "google_pubsub_topic_iam_binding" "bind_gcs_svc_acc" {
   for_each = google_pubsub_topic.notification_topic
-  topic   = each.value.id
-  role    = "roles/pubsub.publisher"
-  members = ["serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"]
+  topic    = each.value.id
+  role     = "roles/pubsub.publisher"
+  members  = ["serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"]
 }
 
 
 resource "google_pubsub_topic" "notification_topic" {
-  for_each = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config })
-  project = var.project_id
-  name = each.value.notification_topic
+  for_each = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config if bucket_config.notification_topic != null })
+  project  = var.project_id
+  name     = each.value.notification_topic
 }

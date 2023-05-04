@@ -16,12 +16,12 @@ variable "labels" {
 }
 
 variable "buckets_config" {
-  description = "Data lake configuration per buckets"
+  description = "Data lake configuration per bucket"
   type = list(
     object({
       bucket_name = string
       autoclass   = optional(bool, true)
-      lifecycle_rules = optional(list( # if autoclass is false or unspecified
+      lifecycle_rules = optional(list(
         object({
           delay         = number
           storage_class = string
