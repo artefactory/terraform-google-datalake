@@ -21,7 +21,7 @@ module "datalake" {
       "name" : "sourceA",
       "iam_rules" : [
         {
-          roles = "roles/storage.admin"
+          role = "roles/storage.admin"
           principals = [
             "blahblah@mail.com"
           ]
@@ -39,7 +39,7 @@ module "datalake" {
       "autoclass" : true,
       "iam_rules" : [
         {
-          roles = "roles/storage.editor"
+          role = "roles/storage.editor"
           principals = [
             "blahblah@mail.com"
           ]

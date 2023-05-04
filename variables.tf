@@ -29,7 +29,7 @@ variable "buckets_config" {
       ), [])
       iam_rules = optional(list(
         object({
-          roles      = string
+          role      = string
           principals = list(string)
         })
       ), [])
@@ -39,9 +39,9 @@ variable "buckets_config" {
   )
   validation {
     condition = alltrue([
-      for bucket_config in var.buckets_config : bucket_config.autoclass == true && length(bucket_config.lifecycle_rules) == 0 || bucket_config.autoclass == false && length(bucket_config.lifecycle_rules) != 0
+      for bucket_config in var.buckets_config : !(bucket_config.autoclass == true && length(bucket_config.lifecycle_rules) != 0)
     ])
-    error_message = "Autoclass cannot be true while lifecyle_rules are defined AND Autoclass cannot be false while lifecycle_rules are empty"
+    error_message = "Autoclass cannot be true while lifecyle_rules are defined"
   }
 }
 
