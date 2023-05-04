@@ -19,25 +19,28 @@ variable "buckets_config" {
   description = "Data lake configuration per buckets"
   type = list(
     object({
-      name      = string
-      autoclass = optional(bool)
+      bucket_name      = string
+      autoclass = optional(bool, true)
       lifecycle_rules = optional(list( # if autoclass is false or unspecified
         object({
           delay         = number
           storage_class = string
         })
-      ))
+      ), [])
       iam_rules = optional(list(
         object({
           roles      = string
           principals = list(string)
         })
-      ))
-      notification_topic = optional(string)
-      regex_validation   = optional(string)
+      ), [])
+      notification_topic = optional(string, null)
+      regex_validation   = optional(string, ".*")
     })
   )
-  default = []
+  validation {
+    condition = !(var.buckets_config.0.autoclass) && var.buckets_config.0.lifecycle_rules != []
+    error_message = "Autoclass cannot be true while lifecyle_rules are defined"
+  }
 }
 
 variable "naming_convention" {

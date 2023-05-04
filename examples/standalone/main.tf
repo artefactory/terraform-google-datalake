@@ -1,5 +1,5 @@
 locals {
-  project_id = "PROJECT_ID" # Replace this with your actual project id
+  project_id = "atf-sbx-barthelemy" # Replace this with your actual project id
 }
 
 resource "random_string" "prefix" {
