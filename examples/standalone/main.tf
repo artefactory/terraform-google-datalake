@@ -14,7 +14,7 @@ provider "google" {
 }
 
 module "datalake" {
-  source = "artefactory/datalake/google"
+  source     = "artefactory/datalake/google"
   project_id = local.project_id
   buckets_config = [
     {
@@ -36,7 +36,7 @@ module "datalake" {
     },
     {
       "name" : "sourceB",
-      "autoclass": true,
+      "autoclass" : true,
       "iam_rules" : [
         {
           roles = "roles/storage.editor"

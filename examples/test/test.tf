@@ -1,5 +1,5 @@
 locals {
-  project_id = "atf-sbx-barthelemy" # Replace this with your actual project id
+  project_id = "la-sandbox-de-reda-fee9" # Replace this with your actual project id
 }
 
 resource "random_string" "prefix" {
@@ -14,14 +14,13 @@ provider "google" {
 }
 
 module "datalake" {
-  source = "../../"
+  source     = "../../"
   project_id = local.project_id
   buckets_config = [
     {
       "bucket_name" : "sourceA",
-      "autoclass": true,
-      "lifecycle_rules" : [
-      ]
+      "autoclass" : true,
+      "lifecycle_rules" : []
     }
   ]
 }
