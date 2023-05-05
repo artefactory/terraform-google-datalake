@@ -22,7 +22,6 @@ resource "google_storage_bucket" "buckets" {
 
   force_destroy = false
   project       = var.project_id
-  storage_class = "STANDARD"
   autoclass {
     enabled = each.value.autoclass
   }
