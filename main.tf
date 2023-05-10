@@ -17,7 +17,7 @@ resource "google_storage_bucket" "buckets" {
   for_each = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config })
 
   labels   = var.labels
-  name     = "${var.naming_convention.prefix}-${each.value.bucket_name}-${var.naming_convention.suffix}"
+  name     = "${var.naming_convention.prefix}${each.value.bucket_name}${var.naming_convention.suffix}"
   location = var.location
 
   force_destroy = false
@@ -46,7 +46,7 @@ resource "google_storage_bucket" "buckets" {
 
 resource "google_storage_bucket_iam_member" "member" {
   for_each   = { for entry in local.iam_list : "${entry.bucket_name}.${entry.role}.${entry.principal}" => entry }
-  bucket     = "${var.naming_convention.prefix}-${each.value.bucket_name}-${var.naming_convention.suffix}"
+  bucket     = "${var.naming_convention.prefix}${each.value.bucket_name}${var.naming_convention.suffix}"
   role       = each.value.role
   member     = each.value.principal
   depends_on = [google_storage_bucket.buckets]
@@ -54,7 +54,7 @@ resource "google_storage_bucket_iam_member" "member" {
 
 resource "google_storage_notification" "notification" {
   for_each       = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config if bucket_config.notification_topic != null })
-  bucket         = "${var.naming_convention.prefix}-${each.value.bucket_name}-${var.naming_convention.suffix}"
+  bucket         = "${var.naming_convention.prefix}${each.value.bucket_name}${var.naming_convention.suffix}"
   payload_format = "JSON_API_V1"
   topic          = each.value.notification_topic
   event_types    = ["OBJECT_FINALIZE", "OBJECT_DELETE", "OBJECT_ARCHIVE", "OBJECT_METADATA_UPDATE"]

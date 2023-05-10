@@ -163,7 +163,7 @@ No requirements.
 | project_id | GCP project ID | `string` | n/as | yes |
 | location  | GCP location  | `string` | `europe-west1`  | no |
 | labels | Bucket labels | `map(string)` | `{}` | no |
-| buckets | Name of the buckets to create | `list(string)`  | n/a | yes |
+| buckets_config | Main config of the buckets to create | `list(string)`  | n/a | yes |
 | lifecycle_rules | Lifecycle rules to define for each bucket | `list(object({delay = number storage_class = string})) ` | `[{"delay" : 60,"storage_class" : "ARCHIVE",}] ` | no |
 | naming convention | Naming convention for each bucket | `object({prefix= string suffix=string})` | `{"prefix" : "", "suffix" : ""}` | no |
 

@@ -3,6 +3,7 @@ locals {
 }
 
 provider "google" {
+  project = local.project_id
   user_project_override = true
   billing_project       = local.project_id
 }
@@ -22,8 +23,8 @@ module "datalake" {
 
   # Optional: defines the naming convention to use for the buckets created by the module.
   naming_convention = {
-    "prefix" : local.project_id
-    "suffix" : random_string.suffix.result
+    "prefix" : "${local.project_id}-"
+    "suffix" : "-${random_string.suffix.result}"
   }
 
   # Main config for all your buckets. Each dictionnary corresponds to one bucket.
@@ -56,7 +57,7 @@ module "datalake" {
       ],
 
       # Optional: Notifications will be sent to the Cloud Pub/Sub topic named "TOPIC" when objects are created, updated, or deleted in the bucket.
-      "notification_topic" : "test"
+      "notification_topic" : "TOPIC"
     }
   ]
 }
