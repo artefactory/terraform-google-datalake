@@ -38,21 +38,20 @@ buckets, lifecycle rules and other features.
 
 ??? success "Required roles and permissions"
 
-  **On the project you want to deploy on:**
-
-  - Broad roles that will work, but **not recommended** for service accounts or even people.
-  - `roles/owner`
-  - `roles/editor`
-  - Recommended roles to respect the least privilege principle.
-  - `roles/pubsub.admin`
-  - `roles/storage.admin`
-  - Granular permissions required to build a custom role specific for this deployment.
-  - `pubsub.topics.create`
-  - `pubsub.topics.delete`
-  - `pubsub.topics.setIamPolicy`
-  - `storage.buckets.create`
-  - `storage.buckets.setIamPolicy`
-  - `storage.buckets.update`
+    **On the project you want to deploy on:**
+    - Broad roles that will work, but **not recommended** for service accounts or even people.
+    - `roles/owner`
+    - `roles/editor`
+    - Recommended roles to respect the least privilege principle.
+    - `roles/pubsub.admin`
+    - `roles/storage.admin`
+    - Granular permissions required to build a custom role specific for this deployment.
+    - `pubsub.topics.create`
+    - `pubsub.topics.delete`
+    - `pubsub.topics.setIamPolicy`
+    - `storage.buckets.create`
+    - `storage.buckets.setIamPolicy`
+    - `storage.buckets.update`
   
 
 ??? success "Log in to GCP with your default credentials"
