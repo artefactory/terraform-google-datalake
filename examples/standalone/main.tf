@@ -1,5 +1,5 @@
 locals {
-  project_id = "PROJECT_ID" # Replace this with your actual project id
+  project_id = "atf-sbx-barthelemy" # Replace this with your actual project id
 }
 
 provider "google" {
@@ -31,7 +31,7 @@ module "datalake" {
 
     # You can create as many buckets as needed following this template.
     {
-      "bucket_name" : "YOUR_BUCKET", # Replace this with the name of your bucket.
+      "bucket_name" : "test", # Replace this with the name of your bucket.
 
       # Optional : List of maps that define the Identity and Access Management (IAM) roles and principals for this bucket. 
       # In this example, the "roles/storage.admin" role is granted for all principals for this bucket.
@@ -39,7 +39,7 @@ module "datalake" {
       "iam_rules" : [
         {
           "role" : "roles/storage.admin",
-          "principals" : ["user:YOUR_USER_MAIL"]
+          "principals" : ["user:pierre-edouard.barthelemy@artefact.com"]
         }
       ],
 
@@ -56,7 +56,7 @@ module "datalake" {
       ],
 
       # Optional: Notifications will be sent to the Cloud Pub/Sub topic named "TOPIC" when objects are created, updated, or deleted in the bucket.
-      "notification_topic" : "TOPIC"
+      "notification_topic" : "test"
     }
   ]
 }
