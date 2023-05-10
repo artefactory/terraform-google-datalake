@@ -206,3 +206,25 @@ buckets, lifecycle rules and other features.
     ```console
     rm -rf .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup
     ```
+
+=== "Managed deployment"
+    
+    !!! info ""
+        This deployment mode is meant for Terrafrom power users who already maintain an infrastructure deployment with a remote state. [Install this module and follow the usage documentation.](https://registry.terraform.io/modules/artefactory/datalake/google/latest)
+
+    !!! tip ""
+        To keep your infra code clean and concerns separated, we recommend adding the finops module in a standalone file.
+    
+    ```console
+    curl -o datalake.tf https://raw.githubusercontent.com/artefactory/terraform-google-datalake/main/examples/standalone/main.tf
+    ```
+    ```console
+    .
+    ├── datalake.tf ⬅
+    ├── main.tf
+    ├── outputs.tf
+    └── variables.tf
+    ```
+    ```console
+    terraform init
+    ```
