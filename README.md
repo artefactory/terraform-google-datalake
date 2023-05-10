@@ -155,22 +155,39 @@ module "datalake" {
 
 No requirements.
 
+## Providers
 
-## Input
+| Name | Version |
+|------|---------|
+| <a name="provider_google"></a> [google](#provider\_google) | n/a |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [google_pubsub_topic.notification_topic](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/pubsub_topic) | resource |
+| [google_pubsub_topic_iam_binding.bind_gcs_svc_acc](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/pubsub_topic_iam_binding) | resource |
+| [google_storage_bucket.buckets](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) | resource |
+| [google_storage_bucket_iam_member.member](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
+| [google_storage_notification.notification](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_notification) | resource |
+| [google_storage_project_service_account.gcs_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/storage_project_service_account) | data source |
+
+## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|----------|
-| project_id | GCP project ID | `string` | n/as | yes |
-| location  | GCP location  | `string` | `europe-west1`  | no |
-| labels | Bucket labels | `map(string)` | `{}` | no |
-| buckets_config | Main config of the buckets to create | `list(string)`  | n/a | yes |
-| lifecycle_rules | Lifecycle rules to define for each bucket | `list(object({delay = number storage_class = string})) ` | `[{"delay" : 60,"storage_class" : "ARCHIVE",}] ` | no |
-| naming convention | Naming convention for each bucket | `object({prefix= string suffix=string})` | `{"prefix" : "", "suffix" : ""}` | no |
+|------|-------------|------|---------|:--------:|
+| <a name="input_buckets_config"></a> [buckets\_config](#input\_buckets\_config) | Data lake configuration per bucket | <pre>list(<br>    object({<br>      bucket_name = string<br>      autoclass   = optional(bool, true)<br>      lifecycle_rules = optional(list(<br>        object({<br>          delay         = number<br>          storage_class = string<br>        })<br>      ), [])<br>      iam_rules = optional(list(<br>        object({<br>          role       = string<br>          principals = list(string)<br>        })<br>      ), [])<br>      notification_topic = optional(string, null)<br>      regex_validation   = optional(string, ".*")<br>    })<br>  )</pre> | n/a | yes |
+| <a name="input_labels"></a> [labels](#input\_labels) | Bucket labels | `map(string)` | `{}` | no |
+| <a name="input_location"></a> [location](#input\_location) | GCP location | `string` | `"europe-west1"` | no |
+| <a name="input_naming_convention"></a> [naming\_convention](#input\_naming\_convention) | Naming convention for each bucket | <pre>object(<br>    {<br>      prefix = string<br>      suffix = string<br>    }<br>  )</pre> | <pre>{<br>  "prefix": "",<br>  "suffix": ""<br>}</pre> | no |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP project id | `string` | n/a | yes |
 
+## Outputs
 
-## Output
-
-| Name    | Description               |
-|---------|---------------------------|
-| buckets | Bucket resources as list. |
-
+| Name | Description |
+|------|-------------|
+| <a name="output_buckets"></a> [buckets](#output\_buckets) | Bucket resources as list. |
