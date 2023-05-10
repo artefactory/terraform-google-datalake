@@ -41,7 +41,7 @@ module "datalake" {
           "role" : "roles/storage.admin",
           "principals" : ["user:YOUR_USER_MAIL"]
         }
-      ]
+      ],
 
       "autoclass" : false, # Optional: Default is true. Need to be set to false in order to define lifecycle_rules.
 

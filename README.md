@@ -28,9 +28,12 @@ provider "google" {
 module "datalake" {
   source     = "artefactory/datalake/google"
   project_id = local.project_id
+
+  # Main config for all your buckets. Each dictionnary corresponds to one bucket.
   bucket_configs = [
-    {"bucket_name" : "source-a"}
-    {"bucket_name" : "source-b"}
+    {
+        "bucket_name" : "YOUR_BUCKET"  # Replace this with the name of your bucket.
+    }
   ]
 }
 ```
@@ -50,17 +53,22 @@ provider "google" {
 module "datalake" {
   source     = "artefactory/datalake/google"
   project_id = local.project_id
+
+  # Main config for all your buckets. Each dictionnary corresponds to one bucket.
   bucket_configs = [
     {
-        "bucket_name" : "source-A"
+        "bucket_name" : "YOUR_BUCKET", # Replace this with the name of your bucket.
+
+        # Optional : List of maps that define the Identity and Access Management (IAM) roles and principals for this bucket. 
+        # More information about GCP roles: https://cloud.google.com/iam/docs/understanding-roles
         "iam_rules" : [
             { 
                 "role" : "roles/editor",
-                "principals" : ["user:user@domain.com"] 
+                "principals" : ["user:YOUR_USER_MAIL"] 
             },
             { 
                 "role" : "roles/viewer",
-                "principals" : ["user:user_2@domain.com"] 
+                "principals" : ["user:YOUR_USER_MAIL"] 
             }
         ]
     }
@@ -80,6 +88,8 @@ provider "google" {
   billing_project       = local.project_id
 }
 
+# Used to generate a random string to use as a suffix for the bucket names.
+# Only required if you want a special naming convention.
 resource "random_string" "suffix" {
   length  = 4
   upper   = false
@@ -89,9 +99,13 @@ resource "random_string" "suffix" {
 module "datalake" {
   source     = "artefactory/datalake/google"
   project_id = local.project_id
+
+  # Main config for all your buckets. Each dictionnary corresponds to one bucket.
   bucket_configs = [
-    {"bucket_name" : "source-a"}
+    {"bucket_name" : "YOUR_BUCKET"}
   ]
+
+  # Optional: defines the naming convention to use for the buckets created by the module.
   naming_convention = {
     "prefix" : local.project_id
     "suffix" : random_string.suffix.result
@@ -117,10 +131,15 @@ provider "google" {
 module "datalake" {
   source     = "artefactory/datalake/google"
   project_id = local.project_id
+
+  # Main config for all your buckets. Each dictionnary corresponds to one bucket.
   bucket_configs = [
     {
-        "bucket_name" : "source-A"
-        "autoclass" : false,
+        "bucket_name" : "YOUR_BUCKET", # Replace this with the name of your bucket.
+        "autoclass" : false, # Optional: Default is true. Need to be set to false in order to define lifecycle_rules.
+
+        # Optional: List of maps that define the lifecycle rules for this bucket.
+        # More information about lifecycle management: https://cloud.google.com/storage/docs/lifecycle
         "lifecycle_rules" : [
             { 
                 "delay" : 60,
