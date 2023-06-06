@@ -68,7 +68,7 @@ resource "google_storage_notification" "notification" {
   for_each       = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config if bucket_config.notification_topic != null })
   bucket         = "${var.naming_convention.prefix}${each.value.bucket_name}${var.naming_convention.suffix}"
   payload_format = "JSON_API_V1"
-  topic          = each.value.notification_topic
+  topic          = "${each.value.bucket_name}-${each.value.notification_topic}"
   event_types    = ["OBJECT_FINALIZE", "OBJECT_DELETE", "OBJECT_METADATA_UPDATE"]
   depends_on     = [google_pubsub_topic_iam_member.bind_gcs_svc_acc, google_storage_bucket.buckets]
 }
@@ -87,7 +87,7 @@ resource "google_pubsub_topic_iam_member" "bind_gcs_svc_acc" {
 resource "google_pubsub_topic" "notification_topic" {
   for_each = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config if bucket_config.notification_topic != null })
   project  = var.project_id
-  name     = each.value.notification_topic
+  name     = "${each.value.bucket_name}-${each.value.notification_topic}"
 }
 
 // --------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ resource "google_cloudfunctions_function" "function" {
 
   event_trigger {
     event_type = "google.pubsub.topic.publish"
-    resource   = each.value.notification_topic
+    resource   = "${each.value.bucket_name}-${each.value.notification_topic}"
     failure_policy {
       retry = false
     }
