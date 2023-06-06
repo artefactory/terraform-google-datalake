@@ -22,10 +22,7 @@ def main(data, context):
         move_object_to_quarantine(source_bucket_name, object_name)
 
 
-def move_object_to_quarantine(
-    source_bucket_name: str,
-    object_name: str,
-):
+def move_object_to_quarantine(source_bucket_name: str, object_name: str):
     quarantine_bucket_name = f"{source_bucket_name}-quarantine"
 
     storage_client = storage.Client()
