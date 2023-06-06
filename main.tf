@@ -53,7 +53,7 @@ resource "google_storage_bucket" "buckets" {
 // --------------------------------------------------------------------------------
 
 resource "google_storage_bucket_iam_member" "member" {
-  for_each = { for entry in local.iam_list : "${entry.bucket_name}.${entry.role}.${entry.principal}" => entry }
+  for_each   = { for entry in local.iam_list : "${entry.bucket_name}.${entry.role}.${entry.principal}" => entry }
   bucket     = "${var.naming_convention.prefix}${each.value.bucket_name}${var.naming_convention.suffix}"
   role       = each.value.role
   member     = each.value.principal
@@ -65,7 +65,7 @@ resource "google_storage_bucket_iam_member" "member" {
 // --------------------------------------------------------------------------------
 
 resource "google_storage_notification" "notification" {
-  for_each = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config if bucket_config.notification_topic != null })
+  for_each       = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config if bucket_config.notification_topic != null })
   bucket         = "${var.naming_convention.prefix}${each.value.bucket_name}${var.naming_convention.suffix}"
   payload_format = "JSON_API_V1"
   topic          = each.value.notification_topic
@@ -79,15 +79,15 @@ data "google_storage_project_service_account" "gcs_account" {
 
 resource "google_pubsub_topic_iam_member" "bind_gcs_svc_acc" {
   for_each = google_pubsub_topic.notification_topic
-  topic  = each.value.id
-  role   = "roles/pubsub.publisher"
-  member = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
+  topic    = each.value.id
+  role     = "roles/pubsub.publisher"
+  member   = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
 }
 
 resource "google_pubsub_topic" "notification_topic" {
   for_each = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config if bucket_config.notification_topic != null })
-  project = var.project_id
-  name    = each.value.notification_topic
+  project  = var.project_id
+  name     = each.value.notification_topic
 }
 
 // --------------------------------------------------------------------------------
