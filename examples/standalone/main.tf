@@ -3,7 +3,7 @@ locals {
 }
 
 provider "google" {
-  project = local.project_id
+  project               = local.project_id
   user_project_override = true
   billing_project       = local.project_id
 }
@@ -57,7 +57,10 @@ module "datalake" {
       ],
 
       # Optional: Notifications will be sent to the Cloud Pub/Sub topic named "TOPIC" when objects are created, updated, or deleted in the bucket.
-      "notification_topic" : "TOPIC"
+      "notification_topic" : "TOPIC",
+
+      # Optional: Files that are not matching the following regex will me moved to a quarantine bucket.
+      "regex_validation" : ".*",
     }
   ]
 }
