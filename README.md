@@ -6,10 +6,7 @@ This Terraform module allows you to configure and deploy a data lake with:
 - Naming conventions
 - IAM bindings for those buckets
 - Notifications
-
-⏳ Incoming features: 
 - Quarantine bucket
-...
 
 ## Usage
 
@@ -153,7 +150,8 @@ module "datalake" {
 
 ## Requirements
 
-No requirements.
+* ```Storage Admin: roles/storage.admin```
+* ```Pub sub admin: roles/pubsub.admin```
 
 ## Providers
 
