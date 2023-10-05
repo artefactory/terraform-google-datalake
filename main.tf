@@ -117,6 +117,8 @@ data "archive_file" "quarantine_function" {
   output_path = "cloud_function.zip"
 }
 
+
+
 resource "google_storage_bucket_object" "archive" {
   name   = "${data.archive_file.quarantine_function.output_path}_${data.archive_file.quarantine_function.output_md5}.zip"
   bucket = google_storage_bucket.bucket.name
@@ -126,7 +128,7 @@ resource "google_storage_bucket_object" "archive" {
 resource "google_cloudfunctions_function" "function" {
   for_each = tomap({ for bucket_config in var.buckets_config : bucket_config.bucket_name => bucket_config if bucket_config.notification_topic != null })
 
-  name    = "${var.naming_convention.prefix}${each.value.bucket_name}${var.naming_convention.suffix}-quarantine-function"
+  name    = "${each.value.bucket_name}-quarantine-function"
   runtime = "python39"
   region  = var.location
 
@@ -136,7 +138,7 @@ resource "google_cloudfunctions_function" "function" {
 
   ingress_settings = "ALLOW_INTERNAL_ONLY"
 
-  entry_point = "move_object_to_quarantine"
+  entry_point = "main"
 
   event_trigger {
     event_type = "google.pubsub.topic.publish"
