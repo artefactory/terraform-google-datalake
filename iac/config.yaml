@@ -1,0 +1,34 @@
+buckets_config:
+  description: "Data lake configuration per bucket"
+  type:
+    - object:
+        bucket_name: string
+        location: string
+        autoclass:
+          type: bool
+          default: true
+        lifecycle_rules:
+          type: list
+          default: []
+          items:
+            - object:
+                delay: number
+                storage_class: string
+        iam_rules: 
+          type: list
+          default: []
+          items:
+            - object:
+                role: string
+                principals: 
+                  type: list
+                  items: string
+        # notification_topic: 
+        #   type: string
+        #   default: null
+        regex_validation: 
+          type: string
+          default: ".*"
+  validation:
+    condition: "alltrue([for bucket_config in var.buckets_config : !(bucket_config.autoclass == true && length(bucket_config.lifecycle_rules) != 0)])"
+    error_message: "Autoclass cannot be true while lifecyle_rules are defined"
