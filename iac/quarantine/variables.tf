@@ -10,3 +10,4 @@ variable "project_id" {
 variable "naming_convention" {
     description = "Naming convention for each bucket"
 }
+
