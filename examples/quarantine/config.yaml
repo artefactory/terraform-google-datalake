@@ -1,0 +1,4 @@
+buckets_config:
+  - bucket_name: "dlk-bucket"
+    location: "europe-west1"
+    regex_validation: "data.*" 

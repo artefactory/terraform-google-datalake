@@ -1,0 +1,37 @@
+buckets_config:
+  - bucket_name: "standard-bucket"
+    autoclass: false # Optional: Default is true. Need to be set to false in order to define lifecycle_rules.
+    labels: {"env": "prod", "team": "data"}
+    location: "europe-west1"
+    versioning: true
+    retention_policy: 
+      retention_period: 30
+      is_locked: true
+    lifecycle_rules:
+      - delay: 30
+        storage_class: "NEARLINE"
+      - delay: 90
+        storage_class: "COLDLINE"
+      - delay: 365
+        storage_class: "ARCHIVE"
+    iam_rules:
+      - role: "roles/storage.admin"
+        principals: ["user:username@domain.com"]
+    regex_validation: ".*" # If put to .* no function and bucket quarantine will be deployed.
+  - bucket_name: "logs-bucket"
+    autoclass: false # Optional: Default is true. Need to be set to false in order to define lifecycle_rules.
+    labels: {"env": "prod", "team": "data"}
+    location: "europe-west1"
+    versioning: true
+    lifecycle_rules:
+      - delay: 30
+        storage_class: "NEARLINE"
+      - delay: 90
+        storage_class: "COLDLINE"
+      - delay: 365
+        storage_class: "ARCHIVE"
+    iam_rules:
+      - role: "roles/storage.admin"
+        principals: ["user:username@domain.com"]
+    
+    regex_validation: "^logs.*" # If put to .* no function and bucket quarantine will be deployed.
