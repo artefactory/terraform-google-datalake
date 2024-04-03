@@ -1,0 +1,28 @@
+spec_version: 1
+
+# Everything in this file will be used to populate the catalog on skaff.artefact.com
+# It is also vectorized as is for the search, so make sure to provide relevant keywords
+
+name: Terraform module GCP Data Lake on GCS
+owner: pierre-edouard.barthelemy@artefact.com
+description: >
+  Configure and deploy a data lake with multiple buckets, lifecycle rules, and other features from one file.
+documentation_url: https://artefact.roadie.so/docs/default/Component/terraform-google-datalake
+
+type: deployable      # deployable, knowledge pack
+lifecycle: prototype  # prototype, production
+
+users:                # DS, DA, DE
+  - DS
+  - DE
+
+clouds:              # aws, gcp, azure, databricks
+  - GCP
+
+technologies:         # python, dbt, terraform, airbyte, ...
+  - terraform
+
+expertises:         # MMM, forecasting, ELT, release engineering, ...
+  - infrastructure as code
+  - data lake
+  - data platform
