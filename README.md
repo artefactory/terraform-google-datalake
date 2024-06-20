@@ -6,84 +6,44 @@ This Terraform module allows you to configure and deploy a data lake with:
 - Naming conventions
 - IAM bindings for those buckets
 - Notifications
-
-⏳ Incoming features: 
 - Quarantine bucket
-...
 
 ## Usage
 
 ### Basic
 
-```hcl
-locals {
-  project_id = "PROJECT_ID" # Replace this with your actual project id
-}
-
-provider "google" {
-  user_project_override = true
-  billing_project       = local.project_id
-}
-
-module "datalake" {
-  source     = "artefactory/datalake/google"
-  project_id = local.project_id
-
-  # Main config for all your buckets. Each dictionnary corresponds to one bucket.
-  bucket_configs = [
-    {
-        "bucket_name" : "YOUR_BUCKET"  # Replace this with the name of your bucket.
-    }
-  ]
-}
+```yaml
+buckets_config:
+  - bucket_name: "minimum-bucket"
+    location: "europe-west1"
+    regex_validation: ".*" 
 ```
 
 ### IAM Rules
 
-```hcl
-locals {
-  project_id = "PROJECT_ID" # Replace this with your actual project id
-}
-
-provider "google" {
-  user_project_override = true
-  billing_project       = local.project_id
-}
-
-module "datalake" {
-  source     = "artefactory/datalake/google"
-  project_id = local.project_id
-
-  # Main config for all your buckets. Each dictionnary corresponds to one bucket.
-  bucket_configs = [
-    {
-        "bucket_name" : "YOUR_BUCKET", # Replace this with the name of your bucket.
-
-        # Optional : List of maps that define the Identity and Access Management (IAM) roles and principals for this bucket. 
-        # More information about GCP roles: https://cloud.google.com/iam/docs/understanding-roles
-        "iam_rules" : [
-            { 
-                "role" : "roles/editor",
-                "principals" : ["user:YOUR_USER_MAIL"] 
-            },
-            { 
-                "role" : "roles/viewer",
-                "principals" : ["user:YOUR_USER_MAIL"] 
-            }
-        ]
-    }
-  ]
-}
+```yaml
+buckets_config:
+  - bucket_name: "standard-bucket"
+    labels: {"env": "prod", "team": "data"}
+    location: "europe-west1"
+    iam_rules:
+      - role: "roles/storage.editor"
+        principals: ["user:username@domain.com"]
+      - role: "roles/storage.objectAdmin"
+        principals: ["serviceAccount:username@domain.com"]
+    regex_validation: ".*"
 ```
 
 ### Naming convention
-
+⚠️ Need to be change in main.tf
 ```hcl
+
 locals {
-  project_id = "PROJECT_ID" # Replace this with your actual project id
+  project_id = "<PROJECT_ID>" # Replace this with your actual project id
 }
 
 provider "google" {
+  project               = local.project_id
   user_project_override = true
   billing_project       = local.project_id
 }
@@ -97,20 +57,19 @@ resource "random_string" "suffix" {
 }
 
 module "datalake" {
-  source     = "artefactory/datalake/google"
+  source = "artefactory/datalake/google"
   project_id = local.project_id
-
-  # Main config for all your buckets. Each dictionnary corresponds to one bucket.
-  bucket_configs = [
-    {"bucket_name" : "YOUR_BUCKET"}
-  ]
 
   # Optional: defines the naming convention to use for the buckets created by the module.
   naming_convention = {
-    "prefix" : local.project_id
-    "suffix" : random_string.suffix.result
+    "prefix" : "${local.project_id}-"
+    "suffix" : "-${random_string.suffix.result}"
   }
+  
+  buckets_config = yamldecode(file("./config.yaml"))["buckets_config"]
+
 }
+
 ```
 
 ### Lifecycle rules
@@ -118,42 +77,24 @@ module "datalake" {
 ⚠️ Please note that `bucket_configs.autoclass` has to be put to `false` to configure custom
 lifecycle rules on your bucket.
 
-```hcl
-locals {
-  project_id = "PROJECT_ID" # Replace this with your actual project id
-}
-
-provider "google" {
-  user_project_override = true
-  billing_project       = local.project_id
-}
-
-module "datalake" {
-  source     = "artefactory/datalake/google"
-  project_id = local.project_id
-
-  # Main config for all your buckets. Each dictionnary corresponds to one bucket.
-  bucket_configs = [
-    {
-        "bucket_name" : "YOUR_BUCKET", # Replace this with the name of your bucket.
-        "autoclass" : false, # Optional: Default is true. Need to be set to false in order to define lifecycle_rules.
-
-        # Optional: List of maps that define the lifecycle rules for this bucket.
-        # More information about lifecycle management: https://cloud.google.com/storage/docs/lifecycle
-        "lifecycle_rules" : [
-            { 
-                "delay" : 60,
-                "storage_class" : "ARCHIVE"
-            }
-        ]
-    }
-  ]
-}
+```yaml
+buckets_config:
+  - bucket_name: "standard-bucket"
+    location: "europe-west1"
+    lifecycle_rules:
+      - delay: 30
+        storage_class: "NEARLINE"
+      - delay: 90
+        storage_class: "COLDLINE"
+      - delay: 365
+        storage_class: "ARCHIVE"
+    regex_validation: ".*"
 ```
 
 ## Requirements
 
-No requirements.
+* ```Storage Admin: roles/storage.admin```
+* ```Pub sub admin: roles/pubsub.admin```
 
 ## Providers
 
